@@ -40,8 +40,8 @@
       </ToolBar>
       <TableView fx:id="tableViewDepartment" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
         <columns>
-          <TableColumn fx:id="tableColumnId" prefWidth="75.0" text="C1" />
-          <TableColumn fx:id="tableColumnName" prefWidth="75.0" text="C2" />
+          <TableColumn fx:id="tableColumnId" prefWidth="75.0" text="Id" />
+          <TableColumn fx:id="tableColumnName" prefWidth="75.0" text="Name" />
         </columns>
          <padding>
             <Insets bottom="20.0" />
