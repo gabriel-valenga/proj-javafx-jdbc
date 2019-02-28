@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
+import gui.util.FormType;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,7 +28,7 @@ import javafx.stage.Stage;
 import model.entities.Department;
 import model.services.DepartmentService;
 
-public class DepartmentListController implements Initializable {
+public class DepartmentListController implements Initializable, DataChangeListener {
 
 	private DepartmentService service;
 	
@@ -45,7 +47,9 @@ public class DepartmentListController implements Initializable {
 	@FXML 
 	private void onBtNewAction(ActionEvent event) {
 		Stage parentStage = Utils.currentStage(event);
-		CreateDialogForm("/gui/DepartmentForm.fxml", parentStage);
+		Department obj = new Department();
+		obj.setId(obsList.size()+1); //INCREMENT
+		CreateDialogForm(obj ,"/gui/DepartmentForm.fxml", parentStage, FormType.NEW);		
 	}
 	
 	private ObservableList<Department> obsList;
@@ -82,10 +86,17 @@ public class DepartmentListController implements Initializable {
 		
 	}
 	
-	private void CreateDialogForm(String absoluteName, Stage parentStage) {
+	private void CreateDialogForm(Department obj, String absoluteName, Stage parentStage, FormType type) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
+			
+			DepartmentFormController controller = loader.getController();
+			controller.setType(type);
+			controller.setDepartment(obj);
+			controller.setDepartmentService(new DepartmentService());
+			controller.subscribeDataChangeListener(this);
+			controller.updateFormData();
 			
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Enter department data: ");
@@ -97,7 +108,12 @@ public class DepartmentListController implements Initializable {
 		}
 		catch(IOException e) {
 			Alerts.showAlert("IOException", "Error loading view", e.getMessage(), AlertType.ERROR);
-		}
+		}		
+	}
+
+	@Override
+	public void onDataChange() {
+		updateTableView();
 		
 	}
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,8 +31,8 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 			st = conn.prepareStatement("INSERT INTO department "
 										+ "(Id, Name) " 
 										+ "VALUES "
-										+ "(?, ?) "
-										);
+										+ "(?, ?) ",
+										Statement.RETURN_GENERATED_KEYS);
 			st.setInt(1, obj.getId());
 			st.setString(2, obj.getName());
 		
@@ -65,7 +66,8 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 		try {
 			st = conn.prepareStatement("UPDATE department " +
 										"SET Name = ? " +
-										"WHERE Id = ? ");		
+										"WHERE Id = ? ",
+										Statement.RETURN_GENERATED_KEYS);		
 		
 			st.setString(1, obj.getName());
 			st.setInt(2, obj.getId());
@@ -89,7 +91,8 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement("DELETE FROM department " +
-										"WHERE Id = ?");
+										"WHERE Id = ?",
+										Statement.RETURN_GENERATED_KEYS);
 			st.setInt(1, id);
 			int rowsAffected = st.executeUpdate();
 			
@@ -144,12 +147,14 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 			Map<Integer, Department> map = new HashMap<>();
 			
 			while(rs.next()) {				
-				Department obj = map.get(rs.getInt("DepartmentId"));
+				//Department obj = map.get(rs.getInt("DepartmentId"));
+				Department obj = map.get(rs.getInt("Id"));
 				
 				if(obj == null) {				
 					obj = instantiateDepartment(rs);
 					list.add(obj);	
-					map.put(rs.getInt("DepartmentId"), obj);
+					//map.put(rs.getInt("DepartmentId"), obj);
+					map.put(rs.getInt("Id"), obj);
 				}
 			}
 			return list;
@@ -165,8 +170,10 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 	
 	private Department instantiateDepartment(ResultSet rs) throws SQLException {
 		Department dep = new Department();
-		dep.setId(rs.getInt("DepartmentId"));
-		dep.setName(rs.getString("DepName"));
+		//dep.setId(rs.getInt("DepartmentId"));
+		//dep.setName(rs.getString("DepName"));
+		  dep.setId(rs.getInt("Id"));
+		  dep.setName(rs.getString("Name"));
 		
 		return dep;		
 	}

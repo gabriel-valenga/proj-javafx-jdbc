@@ -14,5 +14,12 @@ public class DepartmentService {
 	public List<Department> findAll() {
 		return dao.findAll();
 	}
-
+	
+	public void insert(Department obj) {
+		dao.insert(obj);
+	}
+	
+	public void update(Department obj) {
+		dao.update(obj);
+	}
 }
