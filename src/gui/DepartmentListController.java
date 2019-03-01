@@ -2,6 +2,7 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -59,7 +60,10 @@ public class DepartmentListController implements Initializable, DataChangeListen
 	private void onBtNewAction(ActionEvent event) {
 		Stage parentStage = Utils.currentStage(event);
 		Department obj = new Department();
-		obj.setId(obsList.size() + 1); // INCREMENT
+		//ordenar a lista obsList				
+		Collections.sort(obsList);
+		Department last = obsList.get(obsList.size()-1);
+		obj.setId( last.getId() + 1); // INCREMENT
 		createDialogForm(obj, "/gui/DepartmentForm.fxml", parentStage, FormType.NEW);
 	}
 
